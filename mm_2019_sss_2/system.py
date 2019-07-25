@@ -1,34 +1,45 @@
-"""
-system.py
-A short description of the project.
+import numpy as np
+import os
 
-Handles the primary functions
-"""
+class System:
+	"""This is a class object that initializes a system for your Monte Carlo calculation.
 
+	Parameters
+	----------
+	method : str
+		The method is either 'random' or 'file'. By default the method is set to 'random'.
+	num_particles : int
+		The number of particles should be defined as an integer value. By default the value is 20.
+	box_length : float
+		The box is assumed to be cubic. By default the value is set to 3.0 Angstroms.
+	filename : str
+		The file name if the method is set to file.
+	"""
 
-def canvas(with_attribution=True):
-    """
-    Placeholder function to show example docstring (NumPy format)
+	def __init__(self, method='random', num_particles=20, box_length=3.0, filename=None):
+		self.box_length = box_length
+		self.method = method
 
-    Replace this function and doc string for your own project
+		if self.method == 'random':
+			self._initialize_random_simulation_(box_length, num_particles)
 
-    Parameters
-    ----------
-    with_attribution : bool, Optional, default: True
-        Set whether or not to display who the quote is from
+		elif self.method == 'file':
+			try:
+				self._read_info_from_file_(filename)
+			except FileNotFoundError:
+			    print('Either you entered the incorrect file or the file was not found.')
+				print('Initializing a Monte Carlo simulation with: ')
+				print(f'Number of particles: {num_particles}')
+				print(f'Box length: {box_length} Angstroms')
+				self._initialize_random_simulation_(box_length, num_particles)
 
-    Returns
-    -------
-    quote : str
-        Compiled string including quote and optional attribution
-    """
+		else:
+			raise TypeError('You are using a method that is not supported at  this moment.')
 
-    quote = "The code is but a canvas to our imagination."
-    if with_attribution:
-        quote += "\n\t- Adapted from Henry David Thoreau"
-    return quote
+	def _read_info_from_file_(self, filename):
+		self.coordinates = np.loadtxt(filename, skiprows=2, usecols=(1, 2, 3))
+		self.n_particles = len(self.coordinates)
 
-
-if __name__ == "__main__":
-    # Do something if this file is invoked on its own
-    print(canvas())
+	def _initialize_random_simulation_(self, box_length, num_particles):
+		self.n_particles = num_particles
+		self.coordinates = (0.5 - np.random.rand(num_particles, 3)) * box_length
