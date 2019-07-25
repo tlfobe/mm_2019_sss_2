@@ -1,17 +1,10 @@
-mm_2019_sss_2
-==============================
-[//]: # (Badges)
-[![Travis Build Status](https://travis-ci.org/REPLACE_WITH_OWNER_ACCOUNT/mm_2019_sss_2.png)](https://travis-ci.org/REPLACE_WITH_OWNER_ACCOUNT/mm_2019_sss_2)
-[![codecov](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/mm_2019_sss_2/branch/master/graph/badge.svg)](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/mm_2019_sss_2/branch/master)
+![molssi_logo](./images/molssi_sss.jpg)
+# MolSSI Summer School 2019
+A project completed or the 2019 MolSSI Software Summer School was held from 
+July 22-31 at The Texas Advanced Computing Center.
 
-A short description of the project.
+The School’s focus was on best practices in software engineering – 
+version control, continuous integration, data management, programming paradigms.
+## Molecular Mechanics Project (Group 2)
+![logo](./images/logo.jpeg)
 
-### Copyright
-
-Copyright (c) 2019, MM2
-
-
-#### Acknowledgements
- 
-Project based on the 
-[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.0.
