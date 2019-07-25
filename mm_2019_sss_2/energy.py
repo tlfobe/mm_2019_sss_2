@@ -12,7 +12,7 @@ class LJ:
         self.sigma = sigma
         self.epsilon = epsilon
     
-    def calc_energy(self, rij):
+    def calc_energy(self, r):
         return(4 * self.epsilon * ( (self.sigma / r)**12 - (self.sigma /     r)**6 ))
 
 class Buckingham:

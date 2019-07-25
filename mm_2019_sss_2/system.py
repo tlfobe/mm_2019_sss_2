@@ -27,14 +27,16 @@ class System:
 			try:
 				self._read_info_from_file_(filename)
 			except FileNotFoundError:
-			    print('Either you entered the incorrect file or the file was not found.')
-				print('Initializing a Monte Carlo simulation with: ')
-				print(f'Number of particles: {num_particles}')
-				print(f'Box length: {box_length} Angstroms')
-				self._initialize_random_simulation_(box_length, num_particles)
-
+				self._read_in_error(num_particles, box_length)
 		else:
 			raise TypeError('You are using a method that is not supported at  this moment.')
+	
+	def _read_in_error(self, num_particles, box_length):
+		print('Initializing a Monte Carlo simulation with: ')
+		print('Either you entered the incorrect file or the file was not found.')
+		print(f'Number of particles: {num_particles}')
+		print(f'Box length: {box_length} Angstroms')
+		self._initialize_random_simulation_(box_length, num_particles)
 
 	def _read_info_from_file_(self, filename):
 		self.coordinates = np.loadtxt(filename, skiprows=2, usecols=(1, 2, 3))
