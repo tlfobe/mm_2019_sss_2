@@ -1,0 +1,6 @@
+include LICENSE
+include MANIFEST.in
+include versioneer.py
+
+graft mm_2019_sss_2
+global-exclude *.py[cod] __pycache__ *.so
