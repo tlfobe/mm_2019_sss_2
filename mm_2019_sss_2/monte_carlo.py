@@ -1,8 +1,8 @@
 class MonteCarlo:
-    def __init__(self, accept, n_trials, n_accept):
-        self.accept = accept
-        self.n_trials = n_trials
-        self.n_accept = n_accept
+    def __init__(self, new_system : object = None, energy : object = None):
+        self.num_particles = new_system.n_particles
+	self.coordinates = new_system.coordinates
+	self.box_length = new_system.box_length
 
     def accept_or_reject(self, delta_e, beta):
         """Accept or reject a move based on the energy difference and system \
@@ -41,7 +41,7 @@ class MonteCarlo:
         return self.accept
 
 
-    def adjust_displacement(self, max_displacement):
+    def adjust_displacement(self, max_displacement, n_accept, n_trials):
         """Change the acceptance criteria to get the desired rate.
 
         When the acceptance rate is too high, the maximum displacement is adjusted \
@@ -69,6 +69,8 @@ class MonteCarlo:
             The new number of trials.
         """
         self.max_displacement = max_displacement
+        self.n_accept = n_accept
+        self.n_trials = n_trials
 
         acc_rate = float(self.n_accept) / float(self.n_trials)
         if (acc_rate < 0.38):
@@ -84,3 +86,31 @@ class MonteCarlo:
         self.n_accept = 0
 
         return self.max_displacement, self.n_trials, self.n_accept
+
+    ## EQUIVALENT TO THE MAIN FUNCTION
+    def run_simulation(self):
+        self.total_pair_energy = self.energy_functions.calculate_initial_energy(self.coordinates, self.box_length, simulation_cutoff)
+
+        n_trials = 0
+        for i_step in range(n_steps):
+            n_trials += 1
+            i_particle = np.random.randint(num_particles)
+            random_displacement = (2.0 * np.random.rand(3) - 1.0) * max_displacement
+            current_energy = energy_functions.calculate_pair_energy(self.coordinates, self.box_length, self.simulation_cutoff, self.i_particle)
+            proposed_coordinates = coordinates.copy()
+            proposed_coordinates[i_particle] += random_displacement
+            proposed_coordinates -= box_length * np.round(proposed_coordinates / box_length)
+            proposed_energy = energy_functions.calculate_pair_energy(self.coordinates, self.box_length, self.simulation_cutoff, self.i_particle)
+            delta_e = proposed_energy - current_energy
+            accept = accept_or_reject(delta_e, beta)
+            if accept:
+                total_pair_energy += delta_e
+                n_accept += 1
+            coordinates[i_particle] += random_displacement
+            total_energy = (total_pair_energy + tail_correction) / num_particles
+            energy_array[i_step] = total_energy
+            if np.mod(i_step + 1, freq) == 0:
+                print(i_step + 1, energy_array[i_step])
+            if tune_displacement:
+                max_displacement, n_trials, n_accept = adjust_displacement(n_trials, n_accept, max_displacement)
+    return
