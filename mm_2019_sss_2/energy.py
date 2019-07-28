@@ -135,7 +135,7 @@ class Energy:
 def main():
     energy_factory = potentialEnergyFactory()
     lj_energy = energy_factory.build_energy_method('UnitlessLJ')
-    print(lj_energy(2.0))
+    print(lj_energy.calc_energy(2.0))
 
 if __name__ == "__main__":
     main()
