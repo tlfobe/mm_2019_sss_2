@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class SystemSetup:
     """A class object that initializes the system for your Monte Carlo
     calculation.
@@ -26,18 +27,20 @@ class SystemSetup:
         initialized using random coordinates. If you want to read in a file,
         specify the method to be 'file' and provide a filename as a string
         using this keyword.
-    >>> # Scenario 1: Generating a random box with coordinates.
+
+    Scenario 1: Generating a random box with coordinates.
     >>> test_system_1 = SystemSetup(method="random")
     >>> print(test_system_1.n_particles)
     >>> print(test_system_1.coordinates)
-    >>>
-    >>> # Scenario 2: Read a file that initializes your system.
+
+    Scenario 2: Read a file that initializes your system.
     >>> test_system_2 = SystemSetup(method="file", filename="input.dat")
     >>> print(test_system_2.n_particles)
     >>> print(test_system_2.coordinates)
     """
+
     def __init__(self, method: str = 'random', num_particles: int = 20,
-                 box_length: (int,float) = 3.0, filename: str = None):
+                 box_length: (int, float) = 3.0, filename: str = None):
 
         self.method = method
         self.box_length = float(box_length)
