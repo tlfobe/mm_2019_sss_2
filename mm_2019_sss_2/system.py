@@ -1,5 +1,4 @@
 import numpy as np
-import os
 
 class SystemSetup:
     """A class object that initializes the system for your Monte Carlo calculation.
@@ -32,10 +31,10 @@ class SystemSetup:
     >>> print(test_system_2.coordinates)
     """
     def __init__(self, method: str = 'random', num_particles: int = 20,
-                 box_length: float = 3.0, filename: str = None):
+                 box_length: (int,float) = 3.0, filename: str = None):
 
         self.method = method
-        self.box_length = box_length
+        self.box_length = float(box_length)
 
         if self.method == 'random':
             self._initialize_random_simulation_(box_length, num_particles)
@@ -45,12 +44,16 @@ class SystemSetup:
             except FileNotFoundError:
                 filename = input("Couldn't find your filename, try again: ")
                 self._read_info_from_file_(filename)
+                try:
+                    self._read_info_from_file_(filename)
+                except FileNotFoundError:
+                    self._read_in_error_(num_particles, box_length)
         else:
             raise TypeError('You are using a method that is not supported at this moment.')
 
-    def _read_in_error(self, num_particles, box_length):
-        print('Initializing a Monte Carlo simulation with: ')
+    def _read_in_error_(self, num_particles, box_length):
         print('Either you entered the incorrect file or the file was not found.')
+        print('Initializing a Monte Carlo simulation with the following parameters...')
         print(f'Number of particles: {num_particles}')
         print(f'Box length: {box_length} Angstroms')
         self._initialize_random_simulation_(box_length, num_particles)
