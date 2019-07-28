@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class SystemSetup:
     """A class object that initializes the system for your Monte Carlo
     calculation.
