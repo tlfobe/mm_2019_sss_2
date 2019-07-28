@@ -9,7 +9,7 @@ class EnergyFunction(ABC):
         pass
 
 
-class LJ:
+class LJ(EnergyFunction):
     def __init__(self, epsilon, sigma):
         self.sigma = sigma
         self.epsilon = epsilon
@@ -20,7 +20,7 @@ class LJ:
     def cutoff_correction(self, cutoff, number_particles, box_length):
         pass
 
-class Buckingham:
+class Buckingham(EnergyFunction):
     def __init__(self, rho, A, C):
         self.rho = rho
         self.A = A
@@ -32,7 +32,7 @@ class Buckingham:
     def cutoff_correction(self, cutoff, number_particles, box_length):
         pass
 
-class UnitlessLJ:
+class UnitlessLJ(EnergyFunction):
     def __init__(self):
         pass
     
@@ -61,17 +61,25 @@ class potentialEnergyFactory:
 
     def build_energy_method(self, potential_type, **kwargs):
         energy_class = self.methods[potential_type](**kwargs)
-        return (energy_class.calc_energy)
+        return (energy_class)
 
 
-class EnergyCalculator:
+class Energy:
     def __init__(self, potential_type = 'UnitlessLJ', **kwargs):
-        self.energy_function = potentialEnergyFactory().build_energy_method(potential_type, **kwargs)
+        self.energy_obj = potentialEnergyFactory().build_energy_method(potential_type, **kwargs)
 
+    def calculate_tail_correction(self, cutoff, number_particles, box_length):
+        """
+        This function computers the pairwise
+        """
+        e_correction = self.energy_obj.cutoff_correction(cutoff, number_particles, box_length)
+        return e_correction
 
-    def _minimum_image_distance(r_i, r_j, box_length):
+    def _minimum_image_distance(self, r_i, r_j, box_length):
+        """
+        Calculates the shortest distance between a particle and it's PBC image 
+        """
         # This function computes the minimum image distance between two particles
-    ​
         rij = r_i - r_j
         rij = rij - box_length * np.round(rij / box_length)
         rij2 = np.dot(rij, rij)
@@ -80,16 +88,18 @@ class EnergyCalculator:
 
 
     def calculate_initial_energy(self, coordinates, box_length, cutoff):
+        """
+        Iterates over a set of coordinates to calculate total system energy
+        """
         e_total = 0.0
-        e_total += self.energy_function.cutoff_correction(cutoff, len(coordinates), box_length)
         particle_count = len(coordinates)
         for i_particle in range(particle_count):
             for j_particle in range(i_particle):
                 r_i = coordinates[i_particle]
                 r_j = coordinates[j_particle]
-                rij2 = _minimum_image_distance(r_i, r_j, box_length)
+                rij2 = self._minimum_image_distance(r_i, r_j, box_length)
                 if rij2 < cutoff**2:
-                    e_pair = self.energy_function(rij2)
+                    e_pair = self.energy_obj.calc_energy(rij2)
                     e_total += e_pair
         return e_total
 
@@ -111,10 +121,10 @@ class EnergyCalculator:
                 
                 j_position = coordinates[j_particle]
     
-                rij2 = minimum_image_distance(i_position, j_position, box_length)
+                rij2 = self._minimum_image_distance(i_position, j_position, box_length)
     
                 if rij2 < cutoff**2:
-                    e_pair = self.energy_function(rij2)
+                    e_pair = self.energy_obj.calc_energy(rij2)
                     e_total += e_pair
         return e_total
 
