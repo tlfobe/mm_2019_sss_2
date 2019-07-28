@@ -44,6 +44,13 @@ setup(
     # Allows `setup.py test` to work correctly with pytest
     setup_requires=[] + pytest_runner,
 
+    # Add the mcfluid as an entry point
+    entry_points={
+        'console_scripts': [
+            'mcfluid = mm_2019_sss_2.monte_carlo:run_simulation',
+        ],
+    }
+
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     # url='http://www.my_package.com',  # Website
     # install_requires=[],              # Required packages, pulls from pip if needed; do not use for Conda deployment
