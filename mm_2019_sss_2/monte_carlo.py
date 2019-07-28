@@ -1,4 +1,5 @@
 class MonteCarlo:
+
     # TODO: which path?
     #  (1) to include other classes (System, EnergyFunction) into this class---how to specify the class name?
     #  (2) to import other modules in the same directory (System, EnergyFunction)
@@ -167,9 +168,9 @@ class MonteCarlo:
 
         return self.arguments
 
-    def accept_or_reject(self, delta_e, beta):
-        """Accept or reject a move based on the energy difference and system \
-             temperature.
+    def _accept_or_reject_(self, delta_e: float, beta: float):
+        """Accept or reject a move based on the energy difference and system
+        temperature.
 
         This function uses a random numbers to adjust the acceptance criteria.
 
@@ -182,7 +183,7 @@ class MonteCarlo:
 
         Returns
         -------
-        accept : booleen
+        accept : boolean
             Either a "True" or "False" to determine whether to reject the trial.
         """
         import numpy as np
@@ -198,24 +199,22 @@ class MonteCarlo:
             else:
                 accept = False
 
-        return accept
-
 
     def adjust_displacement(self, max_displacement, n_accept, n_trials):
         """Change the acceptance criteria to get the desired rate.
 
-        When the acceptance rate is too high, the maximum displacement is adjusted \
-             to be higher.
-        When the acceptance rate is too low, the maximum displacement is \
-             adjusted lower.
+        When the acceptance rate is too high, the maximum displacement is
+        adjusted to be higher. When the acceptance rate is too low, the
+        maximum displacement is adjusted lower.
 
         Parameters
         ----------
         n_trials : integer
-            The number of trials that have been performed when the function is \
-                 initiated.
+            The number of trials that have been performed when the function is
+            initiated.
         n_accept : integer
-            The current number of accepted trials when the function is initiated.
+            The current number of accepted trials when the function is
+            initiated.
         max_displacement : float
             The specified maximum value for the displacement of the trial.
 
@@ -234,6 +233,7 @@ class MonteCarlo:
             max_displacement *= 0.8
 
         elif (acc_rate > 0.42):
+
             max_displacement *= 1.2
 
         n_trials = 0
