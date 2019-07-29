@@ -6,7 +6,8 @@ class MonteCarlo:
         self.n_trials = n_trials
         self.n_accept = n_accept
 
-    def setup_simulation(coordinates, )
+    def setup_simulation(coordinates):
+        pass
 
     def accept_or_reject(self, delta_e, beta):
         """Accept or reject a move based on the energy difference and system \
