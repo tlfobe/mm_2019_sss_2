@@ -1,5 +1,13 @@
+import mm_2019_sss_2
+
 class MonteCarlo:
 
+    def setup_simulation(coordinates):
+        pass
+
+    def accept_or_reject(self, delta_e, beta):
+        """Accept or reject a move based on the energy difference and system \
+             temperature.
     # TODO: which path?
     #  (1) to include other classes (System, EnergyFunction) into this class---how to specify the class name?
     #  (2) to import other modules in the same directory (System, EnergyFunction)

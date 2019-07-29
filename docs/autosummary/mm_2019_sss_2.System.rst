@@ -1,0 +1,22 @@
+mm\_2019\_sss\_2.System
+=======================
+
+.. currentmodule:: mm_2019_sss_2
+
+.. autoclass:: System
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~System.__init__
+   
+   
+
+   
+   
+   
