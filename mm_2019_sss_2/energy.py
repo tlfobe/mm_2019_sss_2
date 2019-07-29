@@ -45,9 +45,8 @@ class Energy:
             self.energy_function = potentialEnergyFactory().build_energy_method(potential_type, **kwargs)
 
 
-        def _minimum_image_distance(r_i, r_j, box_length):
-            # This function computes the minimum image distance between two particles
-        ​
+        def _minimum_image_distance(self, r_i, r_j, box_length):
+            # This function computes the minimum image distance between two particles  ​
             rij = r_i - r_j
             rij = rij - box_length * np.round(rij / box_length)
             rij2 = np.dot(rij, rij)

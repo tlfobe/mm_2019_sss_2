@@ -6,6 +6,7 @@ A short description of the project.
 # Add imports here
 from .system import *
 from .energy import *
+from .monte_carlo import *
 
 # Handle versioneer
 from ._version import get_versions
