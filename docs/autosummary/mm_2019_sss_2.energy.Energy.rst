@@ -1,0 +1,25 @@
+mm\_2019\_sss\_2.energy.Energy
+==============================
+
+.. currentmodule:: mm_2019_sss_2.energy
+
+.. autoclass:: Energy
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Energy.__init__
+      ~Energy.calculate_initial_energy
+      ~Energy.calculate_pair_energy
+      ~Energy.calculate_tail_correction
+   
+   
+
+   
+   
+   
