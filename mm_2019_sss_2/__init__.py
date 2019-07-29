@@ -5,8 +5,8 @@ A short description of the project.
 
 # Add imports here
 from .system import *
-import mm_2019_sss_2.energy
-import mm_2019_sss_2.monte_carlo
+from .energy import *
+from .monte_carlo import *
 
 # Handle versioneer
 from ._version import get_versions
