@@ -40,10 +40,10 @@ class SystemSetup:
     """
 
     def __init__(self, method: str = 'random', num_particles: int = 20,
-                 box_length: (int, float) = 3.0, filename: str = None):
+                 reduced_density: (int, float) = 0.9, filename: str = None):
 
         self.method = method
-        self.box_length = float(box_length)
+        self.reduced_density = reduced_density
 
         if self.method == 'random':
             self._initialize_random_simulation_(box_length, num_particles)
@@ -60,6 +60,10 @@ class SystemSetup:
         else:
             raise TypeError('You are using a method that is not supported '
                             'at this moment.')
+
+    @property
+    def box_length(self, num_particles, reduced_density):
+        return np.cbrt(num_particles/reduced_density)
 
     def _read_in_error_(self, num_particles, box_length):
         print('Either you entered the incorrect file or the file was not '
