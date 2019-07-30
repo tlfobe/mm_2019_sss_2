@@ -1,12 +1,15 @@
 class MonteCarlo:
-    def __init__(self, new_system: object = None, energy: object = None, arguments = None):
+    def __init__(self, new_system: object = None, energy: object = None,
+                 arguments=None):
         # get parameters from the System object
         self.num_particles = new_system.n_particles
         self.coordinates = new_system.coordinates
         self.box_length = new_system.box_length
         # get functions from the EnergyFunction object
-        self.calculate_initial_energy = energy.calculate_initial_energy(self.coordinates, self.box_length)
-        self.calculate_tail_correction = energy.calculate_tail_correction(self.num_particles, self.box_length)
+        self.calculate_initial_energy = energy.calculate_initial_energy(
+            self.coordinates, self.box_length)
+        self.calculate_tail_correction = energy.calculate_tail_correction(
+            self.num_particles, self.box_length)
         self.energy = energy
         self.arguments = arguments
 
@@ -40,7 +43,6 @@ class MonteCarlo:
                 accept = True
             else:
                 accept = False
-
 
     def adjust_displacement(self, max_displacement, n_accept, n_trials):
         """Change the acceptance criteria to get the desired rate.
@@ -84,7 +86,9 @@ class MonteCarlo:
         return max_displacement, n_trials, n_accept
 
     def run_simulation(self):
-        """This is the main function of the class that runs Monte Carlo simulation on particles in fluid."""
+        """This is the main function of the class that runs Monte Carlo
+        simulation on particles in fluid.
+        """
 
         import numpy as np
 
@@ -102,12 +106,16 @@ class MonteCarlo:
         for i_step in range(self.arguments.n_steps):
             n_trials += 1
             i_particle = np.random.randint(self.num_particles)
-            random_displacement = (2.0 * np.random.rand(3) - 1.0) * self.arguments.max_displacement
-            current_energy = self.energy.calculate_pair_energy(self.coordinates, self.box_length, i_particle)
+            random_displacement = (2.0 * np.random.rand(
+                3) - 1.0) * self.arguments.max_displacement
+            current_energy = self.energy.calculate_pair_energy(
+                self.coordinates, self.box_length, i_particle)
             proposed_coordinates = self.coordinates.copy()
             proposed_coordinates[i_particle] += random_displacement
-            proposed_coordinates -= self.box_length * np.round(proposed_coordinates / self.box_length)
-            proposed_energy = self.energy.calculate_pair_energy(self.coordinates, self.box_length, i_particle)
+            proposed_coordinates -= self.box_length * np.round(
+                proposed_coordinates / self.box_length)
+            proposed_energy = self.energy.calculate_pair_energy(
+                self.coordinates, self.box_length, i_particle)
             delta_e = proposed_energy - current_energy
             beta = 1.0 / self.arguments.reduced_temperature
             accept = self.accept_or_reject(delta_e, beta)
@@ -115,29 +123,35 @@ class MonteCarlo:
                 total_pair_energy += delta_e
                 n_accept += 1
             self.coordinates[i_particle] += random_displacement
-            total_energy = (total_pair_energy + tail_correction) / self.num_particles
+            total_energy = (
+                                       total_pair_energy + tail_correction) / self.num_particles
             energy_array[i_step] = total_energy
             if np.mod(i_step + 1, self.arguments.freq) == 0:
                 print(i_step + 1, energy_array[i_step])
             if self.arguments.tune_displacement:
-                max_displacement, n_trials, n_accept = self.adjust_displacement(n_trials, n_accept, self.arguments.max_displacement)
+                max_displacement, n_trials, n_accept = self.adjust_displacement(
+                    n_trials, n_accept, self.arguments.max_displacement)
         return
+
 
 def _parse_arguments(**kwargs):
     """Checks whether the user has provided any arguments directly to
     the main function through the kwargs keyword, and if not, attempt
     to find them from the command line arguments using argparse.
+
     Notes
     -----
     This method requires the following arguments:
     build_method, file_name, num_particles, simulation_cutoff, reduced_temperature,
     reduced_density, n_steps, freq, energy_function, max_displacement
     to be either all present in the kwargs dictionary, or given on the command line.
+
     Parameters
     ----------
     kwargs: dict of str, values, optional
         A dictionary of passed arguments (which may be empty), where the key is
         the name of the argument, and the value is the argument value.
+
     Returns
     -------
     argparse.Namespace
@@ -276,13 +290,14 @@ def _parse_arguments(**kwargs):
 
     return arguments
 
+
 def main(**kwargs):
     from .system import SystemSetup
     import mm_2019_sss_2.energy
 
     args = _parse_arguments(**kwargs)
-    new_system = SystemSetup(method = 'random')
+    new_system = SystemSetup(method='random')
     energy = mm_2019_sss_2.energy.Energy()
-    sim = MonteCarlo(new_system = new_system, energy = energy, arguments = args)
+    sim = MonteCarlo(new_system=new_system, energy=energy, arguments=args)
     sim.run_simulation()
     return
