@@ -12,6 +12,20 @@ class EnergyFunction(ABC):
 
 
 class LJ(EnergyFunction):
+    """
+    Set-up for the Lennard--Jones potential.
+
+    Parameters
+    ----------
+    epsilon: float, int
+
+    sigma: float, int
+
+
+    Returns
+    --------
+    A class?
+    """
     def __init__(self, epsilon, sigma):
         self.sigma = sigma
         self.epsilon = epsilon
@@ -25,6 +39,20 @@ class LJ(EnergyFunction):
 
 
 class Buckingham(EnergyFunction):
+    """
+    Set-up for the Buckingham potential.
+
+    Parameters
+    ----------
+    epsilon: float, int
+
+    sigma: float, int
+
+
+    Returns
+    --------
+    A class?
+    """
     def __init__(self, rho, A, C):
         self.rho = rho
         self.A = A
@@ -78,7 +106,21 @@ class Energy:
 
     def calculate_tail_correction(self, number_particles, box_length):
         """
-        This function computers the pairwise
+        This function computes the standard tail energy correction for the LJ potential
+
+        Parameters
+        ----------
+        box_length : float, int
+            length of of side of the simulation box (cube)
+        cutoff: float, int
+            the cutoff for the tail energy truncation
+        num_particles: int
+            number of particles
+
+        Return
+        ------
+        e_correction: float
+            tail correction of energy
         """
         e_correction = self.energy_obj.cutoff_correction(
             self.simulation_cutoff, number_particles, box_length)
@@ -86,7 +128,22 @@ class Energy:
 
     def _minimum_image_distance(self, r_i, r_j, box_length):
         """
-        Calculates the shortest distance between a particle and it's PBC image
+        Calculates the shortest distance between a particle and another
+        instance in a periodic boundary condition image
+
+        Parameters
+        ----------
+        r_i: np.array([n,3])
+            The x, y, z coordinates for a particle, i.
+        r_j: np.array([n,3])
+            The x, y, z coordinates for a particle, j.
+        box_length: float, int
+            The length of a side of the side box for the periodic boundary.
+
+        Returns
+        -------
+        rij2: np.array([n,3])
+            The minimum image distance between the two particles, r_i and r_j.
         """
         # This function computes the minimum image distance between two particles
         rij = r_i - r_j
@@ -95,9 +152,33 @@ class Energy:
         return rij2
 
     def calculate_initial_energy(self, coordinates, box_length):
-        """
-        Iterates over a set of coordinates to calculate total system energy
-        """
+        """Iterates over a set of coordinates to calculate total system energy
+
+        This function computes the sum of all pairwise VDW energy between each
+        pair of particles in the system. This is the first instance of the
+        energy calculation. Subsequent uses call calculate_pair_energy.
+
+        Parameters
+        ----------
+        coordinates : np.array([n,3])
+            An array of atomic coordinates. Size should be [n, 3] where n is the
+            number of particles.
+        box_length : float
+            A float indicating the size of the simulation box. Can be either
+            hard-coded or calculated using num_particles and reduced_density.
+        cutoff: float
+            The square of the simulation_cutoff, which is the cutoff distance
+            between two interacting particles.
+
+        i_particle: int
+            Intitial particle for pairwise count
+
+        Returns
+        -------
+        e_total : float
+            The sum of all pairwise VDW energy between each pair of particles in
+            the system.
+
         e_total = 0.0
         particle_count = len(coordinates)
         for i_particle in range(particle_count):
@@ -112,7 +193,32 @@ class Energy:
                     e_total += e_pair
         return e_total
 
+
     def calculate_pair_energy(self, coordinates, box_length, i_particle):
+    """This function computes the sum of all pairwise VDW energy between each
+        pair of particles in the system.
+
+    Parameters
+    ----------
+    coordinates : np.array
+        An array of atomic coordinates. Size should be (n, 3) where n is the
+        number of particles.
+    box_length : float
+        A float indicating the size of the simulation box. Can be either
+        hard-coded or calculated using num_particles and reduced_density.
+    cutoff: float
+        The square of the simulation_cutoff, which is the cutoff distance between
+        two interacting particles.
+
+    i_particle: integer
+        Intitial particle for pairwise count
+
+    Returns
+    -------
+    e_total : float
+        The sum of all pairwise VDW energy between each pair of particles in
+        the system.
+    """
 
         # This function computes the energy of a particle with
         # the rest of the system
