@@ -4,6 +4,23 @@ Unit and regression test for the mm_2019_sss_2 package.
 
 # Import package, test suite, and other packages as needed
 import sys
+import pytest
+import mm_2019_sss_2
+
+@pytest.fixture(scope='module')
+def system_fixture():
+
+    obj = mm_2019_sss_2.SystemSetup()
+    return obj
+
+def test_system_method_r(system_fixture):
+    assert system_fixture.method == 'random'
+
+def test_system_num_part(system_fixture):
+    assert system_fixture.box_length == 20
+
+def test_system_red_dens(system_fixture):
+    assert system_fixture.reduced_density == 0.9
 
 def test_mm_2019_sss_2_imported():
     """Sample test, will always pass so long as import statement worked"""
