@@ -47,7 +47,7 @@ setup(
     # Add the mcfluid as an entry point
     entry_points={
         'console_scripts': [
-            'mcfluid = mm_2019_sss_2.monte_carlo:run_simulation',
+            'mcfluid = mm_2019_sss_2.monte_carlo:main',
         ],
     }
 
