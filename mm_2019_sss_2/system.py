@@ -43,10 +43,11 @@ class SystemSetup:
                  reduced_density: (int, float) = 0.9, filename: str = None):
 
         self.method = method
+        self.num_particles = num_particles
         self.reduced_density = reduced_density
 
         if self.method == 'random':
-            self._initialize_random_simulation_(box_length, num_particles)
+            self._initialize_random_simulation_(self.box_length, num_particles)
         elif self.method == 'file':
             try:
                 self._read_info_from_file_(filename)
@@ -56,14 +57,14 @@ class SystemSetup:
                 try:
                     self._read_info_from_file_(filename)
                 except FileNotFoundError:
-                    self._read_in_error_(num_particles, box_length)
+                    self._read_in_error_(num_particles, self.box_length)
         else:
             raise TypeError('You are using a method that is not supported '
                             'at this moment.')
 
     @property
-    def box_length(self, num_particles, reduced_density):
-        return np.cbrt(num_particles/reduced_density)
+    def box_length(self):
+        return np.cbrt(self.num_particles/self.reduced_density)
 
     def _read_in_error_(self, num_particles, box_length):
         print('Either you entered the incorrect file or the file was not '
