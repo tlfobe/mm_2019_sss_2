@@ -10,7 +10,6 @@ class MonteCarlo:
         self.energy = energy
         self.arguments = arguments
 
-
     def accept_or_reject(self, delta_e: float, beta: float):
         """Accept or reject a move based on the energy difference and system
         temperature.

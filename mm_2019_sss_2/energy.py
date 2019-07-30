@@ -86,7 +86,6 @@ class Energy:
         return rij2
 
 
-
     def calculate_initial_energy(self, coordinates, box_length):
         """
         Iterates over a set of coordinates to calculate total system energy
