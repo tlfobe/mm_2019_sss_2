@@ -12,15 +12,12 @@ class EnergyFunction(ABC):
 
 
 class LJ(EnergyFunction):
-    """
-    Set-up for the Lennard--Jones potential.
+    """Set-up for the Lennard--Jones potential.
 
     Parameters
     ----------
     epsilon: float, int
-
     sigma: float, int
-
 
     Returns
     --------
@@ -39,15 +36,12 @@ class LJ(EnergyFunction):
 
 
 class Buckingham(EnergyFunction):
-    """
-    Set-up for the Buckingham potential.
+    """Set-up for the Buckingham potential.
 
     Parameters
     ----------
     epsilon: float, int
-
     sigma: float, int
-
 
     Returns
     --------
@@ -105,8 +99,7 @@ class Energy:
         self.simulation_cutoff = simulation_cutoff
 
     def calculate_tail_correction(self, number_particles, box_length):
-        """
-        This function computes the standard tail energy correction for the LJ potential
+        """This function computes the standard tail energy correction for the LJ potential
 
         Parameters
         ----------
@@ -117,8 +110,8 @@ class Energy:
         num_particles: int
             number of particles
 
-        Return
-        ------
+        Returns
+        -------
         e_correction: float
             tail correction of energy
         """
@@ -178,7 +171,7 @@ class Energy:
         e_total : float
             The sum of all pairwise VDW energy between each pair of particles in
             the system.
-
+        """
         e_total = 0.0
         particle_count = len(coordinates)
         for i_particle in range(particle_count):
@@ -195,33 +188,34 @@ class Energy:
 
 
     def calculate_pair_energy(self, coordinates, box_length, i_particle):
-    """This function computes the sum of all pairwise VDW energy between each
-        pair of particles in the system.
+        """This function computes the sum of all pairwise VDW energy between each
+            pair of particles in the system.
 
-    Parameters
-    ----------
-    coordinates : np.array
-        An array of atomic coordinates. Size should be (n, 3) where n is the
-        number of particles.
-    box_length : float
-        A float indicating the size of the simulation box. Can be either
-        hard-coded or calculated using num_particles and reduced_density.
-    cutoff: float
-        The square of the simulation_cutoff, which is the cutoff distance between
-        two interacting particles.
+        Parameters
+        ----------
+        coordinates : np.array
+            An array of atomic coordinates. Size should be (n, 3) where n is the
+            number of particles.
+        box_length : float
+            A float indicating the size of the simulation box. Can be either
+            hard-coded or calculated using num_particles and reduced_density.
+        cutoff: float
+            The square of the simulation_cutoff, which is the cutoff distance between
+            two interacting particles.
 
-    i_particle: integer
-        Intitial particle for pairwise count
+        i_particle: integer
+            Intitial particle for pairwise count
 
-    Returns
-    -------
-    e_total : float
-        The sum of all pairwise VDW energy between each pair of particles in
-        the system.
-    """
+        Returns
+        -------
+        e_total : float
+            The sum of all pairwise VDW energy between each pair of particles in
+            the system.
+        """
 
-        # This function computes the energy of a particle with
-        # the rest of the system
+            # This function computes the energy of a particle with
+            # the rest of the system
+
 
         e_total = 0.0
 
@@ -236,7 +230,7 @@ class Energy:
                 j_position = coordinates[j_particle]
 
                 rij2 = self._minimum_image_distance(i_position, j_position,
-                                                    box_length)
+                                                        box_length)
 
                 if rij2 < self.simulation_cutoff ** 2:
                     e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
