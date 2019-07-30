@@ -1,4 +1,4 @@
-![molssi_logo](./images/molssi_sss.jpg)
+![molssi_logo](./images/MM2_logo.png)
 # MolSSI Summer School 2019
 A project completed or the 2019 MolSSI Software Summer School was held from
 July 22-31 at The Texas Advanced Computing Center.
