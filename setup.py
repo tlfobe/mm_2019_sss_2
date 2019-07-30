@@ -47,9 +47,9 @@ setup(
     # Add the mcfluid as an entry point
     entry_points={
         'console_scripts': [
-            'mcfluid = mm_2019_sss_2.monte_carlo:run_simulation',
+            'mcfluid = mm_2019_sss_2.monte_carlo:main',
         ],
-    }
+    }, install_requires=['numpy']
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     # url='http://www.my_package.com',  # Website

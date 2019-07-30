@@ -65,7 +65,7 @@ class UnitlessLJ(EnergyFunction):
         pass
 
     def calc_energy(self, r):
-        return(4.0 * (np.power(1/r , 6) - np.power(1/r, 12)))
+        return(4.0 * (np.power(1/r , 12) - np.power(1/r, 6)))
 
     def cutoff_correction(self, cutoff, number_particles, box_length):
         # This function computes the standard tail energy correction for the LJ potential
@@ -93,10 +93,10 @@ class potentialEnergyFactory:
 
 
 class Energy:
-    def __init__(self, potential_type = 'UnitlessLJ', **kwargs):
+    def __init__(self, potential_type = 'UnitlessLJ', simulation_cutoff = 3.0, **kwargs):
         self.energy_obj = potentialEnergyFactory().build_energy_method(potential_type, **kwargs)
-
-    def calculate_tail_correction(self, cutoff, number_particles, box_length):
+        self.simulation_cutoff = simulation_cutoff
+    def calculate_tail_correction(self, number_particles, box_length):
         """
         This function computes the standard tail energy correction for the LJ potential
 
@@ -114,7 +114,7 @@ class Energy:
         e_correction: float
             tail correction of energy
         """
-        e_correction = self.energy_obj.cutoff_correction(cutoff, number_particles, box_length)
+        e_correction = self.energy_obj.cutoff_correction(self.simulation_cutoff, number_particles, box_length)
         return e_correction
 
     def _minimum_image_distance(self, r_i, r_j, box_length):
@@ -179,8 +179,10 @@ class Energy:
                 r_i = coordinates[i_particle]
                 r_j = coordinates[j_particle]
                 rij2 = self._minimum_image_distance(r_i, r_j, box_length)
-                if rij2 < cutoff**2:
-                    e_pair = self.energy_obj.calc_energy(rij2)
+                print(f'rij2: {rij2}')
+                if rij2 < self.simulation_cutoff**2:
+                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
+                    print(f'e pair: {e_pair}')
                     e_total += e_pair
         return e_total
 
@@ -228,8 +230,8 @@ class Energy:
 
                 rij2 = self._minimum_image_distance(i_position, j_position, box_length)
 
-                if rij2 < cutoff**2:
-                    e_pair = self.energy_obj.calc_energy(rij2)
+                if rij2 < self.simulation_cutoff**2:
+                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
                     e_total += e_pair
         return e_total
 
