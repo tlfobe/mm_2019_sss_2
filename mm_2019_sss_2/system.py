@@ -78,6 +78,8 @@ class SystemSetup:
     def _read_info_from_file_(self, filename):
         self.coordinates = np.loadtxt(filename, skiprows=2, usecols=(1, 2, 3))
         self.n_particles = len(self.coordinates)
+        print(self.coordinates)
+        print(self.n_particles)
 
     def _initialize_random_simulation_(self, box_length, num_particles):
         self.n_particles = num_particles

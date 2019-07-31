@@ -179,10 +179,8 @@ class Energy:
                 r_i = coordinates[i_particle]
                 r_j = coordinates[j_particle]
                 rij2 = self._minimum_image_distance(r_i, r_j, box_length)
-                print(f'rij2: {rij2}')
                 if rij2 < self.simulation_cutoff ** 2:
                     e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
-                    print(f'e pair: {e_pair}')
                     e_total += e_pair
         return e_total
 
