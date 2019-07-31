@@ -14,7 +14,7 @@ def test_energy_factory_lj():
 
 def test_energy_factory_buckingham():
     energy_factory = mm_2019_sss_2.energy.potentialEnergyFactory()
-    energy_function = energy_factory.build_energy_method('Buckingham', rho = 1, A = 1, C = 1)
+    energy_function = energy_factory.build_energy_method('Buckingham', rho = 1, a = 1, c = 1)
     assert energy_function.calc_energy(1) == -0.6321205588285577
 
 def test_energy_factory_unitlesslj():
@@ -24,7 +24,9 @@ def test_energy_factory_unitlesslj():
 
 def test_energy_calculator():
     energy_obj = mm_2019_sss_2.energy.Energy()
-    assert(energy_obj.calculate_tail_correction(2, 10, 10) == -0.10417433972841154)
+    energy_obj.simulation_cutoff = 3
+    assert(energy_obj.calculate_tail_correction(2, 10) == -0.0012405555234009783)
     test_coords = np.array([[0,0,0], [0,0,1.5]])
-    assert(energy_obj.calculate_initial_energy(test_coords, 10, 10) == 0.03059177374878155)
-    assert(energy_obj.calculate_initial_energy(test_coords, 10, 1) == 0)
+    assert(energy_obj.calculate_initial_energy(test_coords, 10) == -0.03059177374878155)
+    energy_obj.simulation_cutoff = 1
+    assert(energy_obj.calculate_initial_energy(test_coords, 10) == 0)

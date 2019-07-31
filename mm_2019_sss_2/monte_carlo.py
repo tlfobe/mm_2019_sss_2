@@ -157,6 +157,7 @@ class MonteCarlo:
                 self.arguments.max_displacement, n_accept, n_trials = self.adjust_displacement(self.arguments.max_displacement, n_accept, n_trials)
 
         self.energy_array = energy_array
+
         return
 def str2bool(v):
     if isinstance(v, bool):

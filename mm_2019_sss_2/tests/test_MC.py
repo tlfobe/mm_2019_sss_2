@@ -14,6 +14,7 @@ default_namespace = Namespace(build_method='random', energy_function='UnitlessLJ
 filename=None, freq=1000, max_displacement=0.1, n_steps=1000000, num_particles=20, \
 reduced_density=0.9, reduced_temperature=0.9, simulation_cutoff=3.0, tune_displacement=True, output_traj=False, traj_file=None, traj_freq=1000, plot=False)
 
+
 default_MC = MM2.monte_carlo.MonteCarlo(new_system=default_system, energy=MC_energy, arguments=default_namespace)
 # Here we use default_system, MC_energy and default_namespace to generate an instance of the class MonteCarlo
 
@@ -57,7 +58,7 @@ def test_parse_arguments_defaults():
     we can get the list of defaults, which is to be compared with the list of specified values.
     """
 
-    # create an instance of MonteCarlo for the test case (all arugments are specified to be different from the defaults
+    # create an instance of MonteCarlo for the test case (all arugments are specified to be different from the defaults    
     # except for the build method)
     test_system = MM2.system.SystemSetup(num_particles=50, reduced_density=0.2)
     test_namespace = Namespace(build_method='file', energy_function='LJ', \

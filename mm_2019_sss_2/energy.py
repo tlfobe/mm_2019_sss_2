@@ -1,20 +1,23 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-
 class EnergyFunction(ABC):
     """This class is an abstract class for all the energy functions that are
     going to be written. All energy functions that inherit this structure MUST
-    have a calc_energy method.
+    have a calc_energy method and a cutoff_correction method.
     """
 
     @abstractmethod
     def calc_energy(self):
         pass
 
+    @abstractmethod
+    def cutoff_correction(self):
+        pass
 
 class LJ(EnergyFunction):
     """Setup for the Lennard-Jones potential.
+
     Parameters
     ----------
     epsilon: float, int
@@ -30,9 +33,12 @@ class LJ(EnergyFunction):
         return (4 * self.epsilon * ((self.sigma / r) ** 12
                                     - (self.sigma / r) ** 6))
 
+    def cutoff_correction(self, cutoff, number_particles, box_length):
+        return(0)
 
 class Buckingham(EnergyFunction):
     """Set-up for the Buckingham potential.
+    
     Parameters
     ----------
     rho: float, int
@@ -49,9 +55,12 @@ class Buckingham(EnergyFunction):
     def calc_energy(self, r):
         return self.a * np.exp(-r / self.rho) - self.c / r ** 6
 
+    def cutoff_correction(self, cutoff, number_particles, box_length):
+        return(0)
 
 class UnitlessLJ(EnergyFunction):
     """Set-up for the Buckingham potential.
+    
     Parameters
     ----------
     r: float, int
@@ -216,7 +225,7 @@ class Energy:
                 rij = self._minimum_image_distance(i_position, j_position,
                                                     box_length)
 
-                if rij  < self.simulation_cutoff:
+                if rij < self.simulation_cutoff:
                     e_pair = self.energy_obj.calc_energy(rij)
                     e_total += e_pair
         return e_total

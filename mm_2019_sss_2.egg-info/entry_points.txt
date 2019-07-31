@@ -1,0 +1,3 @@
+[console_scripts]
+mcfluid = mm_2019_sss_2.monte_carlo:main
+
