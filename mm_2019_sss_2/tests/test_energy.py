@@ -23,10 +23,17 @@ def test_energy_factory_unitlesslj():
     assert energy_function.calc_energy(1) == 0.0
 
 def test_energy_calculator():
+<<<<<<< HEAD
     energy_obj = mm_2019_sss_2.energy.Energy()
     energy_obj.simulation_cutoff = 3
     assert(energy_obj.calculate_tail_correction(2, 10) == -0.0012405555234009783)
     test_coords = np.array([[0,0,0], [0,0,1.5]])
     assert(energy_obj.calculate_initial_energy(test_coords, 10) == -0.03059177374878155)
+=======
+    energy_obj = mm_2019_sss_2.energy.Energy(simulation_cutoff=3)
+    assert(energy_obj.calculate_tail_correction(2, 3) == -0.045946500866702905)
+    test_coords = np.array([[0,0,0], [0,0,1.5]])
+    assert(energy_obj.calculate_initial_energy(test_coords, 10) == -0.3203365942785745)
+>>>>>>> b9892ddd690ee819da897f7969470c8393754b6b
     energy_obj.simulation_cutoff = 1
     assert(energy_obj.calculate_initial_energy(test_coords, 10) == 0)
