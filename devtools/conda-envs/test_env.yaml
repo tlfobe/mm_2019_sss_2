@@ -13,6 +13,7 @@ dependencies:
     # Dependencies
   - numpy
   - scipy
+  - matplotlib
 
     # base python
   # - abc

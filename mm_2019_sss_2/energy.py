@@ -17,11 +17,10 @@ class EnergyFunction(ABC):
 
 class LJ(EnergyFunction):
     """Setup for the Lennard-Jones potential.
-​
+
     Parameters
     ----------
     epsilon: float, int
-​
     sigma: float, int
     """
 
@@ -39,13 +38,11 @@ class LJ(EnergyFunction):
 
 class Buckingham(EnergyFunction):
     """Set-up for the Buckingham potential.
-​
+    
     Parameters
     ----------
     rho: float, int
-​
     a: float, int
-​
     c: float, int
     """
 
@@ -57,13 +54,13 @@ class Buckingham(EnergyFunction):
 
     def calc_energy(self, r):
         return self.a * np.exp(-r / self.rho) - self.c / r ** 6
+
     def cutoff_correction(self, cutoff, number_particles, box_length):
         return(0)
 
-
 class UnitlessLJ(EnergyFunction):
     """Set-up for the Buckingham potential.
-​
+    
     Parameters
     ----------
     r: float, int
@@ -109,7 +106,6 @@ class Energy:
 
     def calculate_tail_correction(self, number_particles, box_length):
         """This function computes the standard tail energy correction for the LJ potential
-
         Parameters
         ----------
         box_length : float, int
@@ -118,7 +114,6 @@ class Energy:
             the cutoff for the tail energy truncation
         num_particles: int
             number of particles
-
         Returns
         -------
         e_correction: float
@@ -132,7 +127,6 @@ class Energy:
         """
         Calculates the shortest distance between a particle and another
         instance in a periodic boundary condition image
-
         Parameters
         ----------
         r_i: np.array([n,3])
@@ -141,7 +135,6 @@ class Energy:
             The x, y, z coordinates for a particle, j.
         box_length: float, int
             The length of a side of the side box for the periodic boundary.
-
         Returns
         -------
         rij2: np.array([n,3])
@@ -151,15 +144,15 @@ class Energy:
         rij = r_i - r_j
         rij = rij - box_length * np.round(rij / box_length)
         rij2 = np.dot(rij, rij)
-        return rij2
+        distance = np.sqrt(rij2)
+
+        return distance
 
     def calculate_initial_energy(self, coordinates, box_length):
         """Iterates over a set of coordinates to calculate total system energy
-
         This function computes the sum of all pairwise VDW energy between each
         pair of particles in the system. This is the first instance of the
         energy calculation. Subsequent uses call calculate_pair_energy.
-
         Parameters
         ----------
         coordinates : np.array([n,3])
@@ -171,10 +164,8 @@ class Energy:
         cutoff: float
             The square of the simulation_cutoff, which is the cutoff distance
             between two interacting particles.
-
         i_particle: int
             Intitial particle for pairwise count
-
         Returns
         -------
         e_total : float
@@ -190,14 +181,12 @@ class Energy:
                 rij = self._minimum_image_distance(r_i, r_j, box_length)
                 if rij < self.simulation_cutoff:
                     e_pair = self.energy_obj.calc_energy(rij)
-                    print(f'e pair: {e_pair}')
                     e_total += e_pair
         return e_total
 
     def calculate_pair_energy(self, coordinates, box_length, i_particle):
         """This function computes the sum of all pairwise VDW energy between each
             pair of particles in the system.
-
         Parameters
         ----------
         coordinates : np.array
@@ -209,10 +198,8 @@ class Energy:
         cutoff: float
             The square of the simulation_cutoff, which is the cutoff distance between
             two interacting particles.
-
         i_particle: integer
             Intitial particle for pairwise count
-
         Returns
         -------
         e_total : float
@@ -220,7 +207,7 @@ class Energy:
             the system.
         """
 
-       # This function computes the energy of a particle with
+        # This function computes the energy of a particle with
         # the rest of the system
 
         e_total = 0.0
