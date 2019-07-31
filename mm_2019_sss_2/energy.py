@@ -76,7 +76,8 @@ class UnitlessLJ(EnergyFunction):
         sig_by_cutoff9 = np.power(sig_by_cutoff3, 3)
         e_correction = sig_by_cutoff9 - 3.0 * sig_by_cutoff3
 
-        e_correction *= 8.0 / 9.0 * np.pi * number_particles / volume * number_particles
+        e_correction *= 8.0 / 9.0 * np.pi * number_particles / volume\
+                        * number_particles
 
         return e_correction
 
@@ -234,7 +235,7 @@ class Energy:
                                                     box_length)
 
                 if rij  < self.simulation_cutoff:
-                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
+                    e_pair = self.energy_obj.calc_energy(rij)
                     e_total += e_pair
         return e_total
 
