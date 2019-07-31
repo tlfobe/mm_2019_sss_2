@@ -2,6 +2,7 @@ class MonteCarlo:
     def __init__(self, new_system: object = None, energy: object = None, arguments = None):
         # get parameters from the System object
         #self.num_particles = new_system.num_particles
+        # print(arguments)
         self.coordinates = new_system.coordinates
         self.box_length = new_system.box_length
         # get functions from the EnergyFunction object
@@ -126,13 +127,15 @@ class MonteCarlo:
                 n_accept += 1
                 self.coordinates[i_particle] += random_displacement
                 self.coordinates -= self.box_length * np.round(self.coordinates / self.box_length)
-                total_energy = (total_pair_energy + tail_correction) / self.arguments.num_particles
+            total_energy = (total_pair_energy + tail_correction) / self.arguments.num_particles
                 #print(f'total energy: {total_energy}')
             energy_array[i_step] = total_energy
             if np.mod(i_step + 1, self.arguments.freq) == 0:
                 print(i_step + 1, energy_array[i_step])
             if self.arguments.tune_displacement:
-                max_displacement, n_trials, n_accept = self.adjust_displacement(n_trials, n_accept, self.arguments.max_displacement)
+                self.arguments.max_displacement, n_trials, n_accept = self.adjust_displacement(n_trials, n_accept, self.arguments.max_displacement)
+            #print(self.coordinates)
+            #print(self.arguments.num_particles)
         return
 
 def _parse_arguments(**kwargs):
@@ -156,7 +159,8 @@ def _parse_arguments(**kwargs):
         A namespace containing the arguments which either were directly passed
         in as kwargs, or this which were taken as input from the command line.
         e.g. Namespace(build_method = 'random', file_name = None, num_particles = 100, simulation_cutoff = 3.0,
-        reduced_temperature = 0.9, reduced_density = 0.9, n_steps = 1000000, freq = 1000, energy_function = 'LJ', max_displacement = 0.1)
+        reduced_temperature = 0.9, reduced_density = 0.9, n_steps = 1000000, freq = 1000, energy_function = 'LJ', 
+        tune_displacement = True, max_displacement = 0.1)
     """
 
     arguments = None
@@ -202,7 +206,7 @@ def _parse_arguments(**kwargs):
             nargs='?',
             type=float,
             default=3.0,
-            help='the number of particles in the system. The default is 20.')
+            help='the cutoff for energy calculation in the system. The default is 3.0.')
         parser.add_argument(
             '--reduced_temperature',
             required=False,
@@ -293,7 +297,8 @@ def main(**kwargs):
     import mm_2019_sss_2.energy
 
     args = _parse_arguments(**kwargs)
-    new_system = SystemSetup(method = 'random')
+    new_system = SystemSetup(num_particles=args.num_particles, reduced_density=args.reduced_density, filename=args.filename)
+    
     energy = mm_2019_sss_2.energy.Energy()
     sim = MonteCarlo(new_system = new_system, energy = energy, arguments = args)
     sim.run_simulation()

@@ -1,0 +1,72 @@
+============================= test session starts ==============================
+platform linux -- Python 3.7.3, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
+rootdir: /mnt/d/mm_2019_sss_2
+collected 5 items
+
+test_MC.py ..FFF                                                         [100%]
+
+=================================== FAILURES ===================================
+________________ test_adjust_displacement[100-36-10-expected0] _________________
+
+n_trials = 100, n_accept = 36, max_displacement = 10, expected = (8, 0, 0)
+
+    @pytest.mark.parametrize("n_trials, n_accept, max_displacement, expected", [
+        (100, 36, 10, (8, 0, 0)), (100, 40, 10, (10, 0, 0)), (100, 44, 10, (12, 0, 0))
+    ])
+    
+    def test_adjust_displacement(n_trials, n_accept, max_displacement, expected):
+        """
+        First test case (100, 36, 10, (8, 0, 0)): acc_rate = 0.36 < 0.38, so max_displacement = 8
+        Second test case (100, 40, 10, (8, 0, 0)): 0.38 < acc_rate = 0.40 < 0.42, so max_displacement = 10
+        Third test case (100, 44, 10, (8, 0, 0)): acc_rate = 0.44 > 0.42, so max_displacement = 12
+        """
+        calculated = test_MC.adjust_displacement(n_trials, n_accept, max_displacement)
+>       assert expected == calculated
+E       assert (8, 0, 0) == (120.0, 0, 0)
+E         At index 0 diff: 8 != 120.0
+E         Use -v to get the full diff
+
+test_MC.py:49: AssertionError
+________________ test_adjust_displacement[100-40-10-expected1] _________________
+
+n_trials = 100, n_accept = 40, max_displacement = 10, expected = (10, 0, 0)
+
+    @pytest.mark.parametrize("n_trials, n_accept, max_displacement, expected", [
+        (100, 36, 10, (8, 0, 0)), (100, 40, 10, (10, 0, 0)), (100, 44, 10, (12, 0, 0))
+    ])
+    
+    def test_adjust_displacement(n_trials, n_accept, max_displacement, expected):
+        """
+        First test case (100, 36, 10, (8, 0, 0)): acc_rate = 0.36 < 0.38, so max_displacement = 8
+        Second test case (100, 40, 10, (8, 0, 0)): 0.38 < acc_rate = 0.40 < 0.42, so max_displacement = 10
+        Third test case (100, 44, 10, (8, 0, 0)): acc_rate = 0.44 > 0.42, so max_displacement = 12
+        """
+        calculated = test_MC.adjust_displacement(n_trials, n_accept, max_displacement)
+>       assert expected == calculated
+E       assert (10, 0, 0) == (120.0, 0, 0)
+E         At index 0 diff: 10 != 120.0
+E         Use -v to get the full diff
+
+test_MC.py:49: AssertionError
+________________ test_adjust_displacement[100-44-10-expected2] _________________
+
+n_trials = 100, n_accept = 44, max_displacement = 10, expected = (12, 0, 0)
+
+    @pytest.mark.parametrize("n_trials, n_accept, max_displacement, expected", [
+        (100, 36, 10, (8, 0, 0)), (100, 40, 10, (10, 0, 0)), (100, 44, 10, (12, 0, 0))
+    ])
+    
+    def test_adjust_displacement(n_trials, n_accept, max_displacement, expected):
+        """
+        First test case (100, 36, 10, (8, 0, 0)): acc_rate = 0.36 < 0.38, so max_displacement = 8
+        Second test case (100, 40, 10, (8, 0, 0)): 0.38 < acc_rate = 0.40 < 0.42, so max_displacement = 10
+        Third test case (100, 44, 10, (8, 0, 0)): acc_rate = 0.44 > 0.42, so max_displacement = 12
+        """
+        calculated = test_MC.adjust_displacement(n_trials, n_accept, max_displacement)
+>       assert expected == calculated
+E       assert (12, 0, 0) == (120.0, 0, 0)
+E         At index 0 diff: 12 != 120.0
+E         Use -v to get the full diff
+
+test_MC.py:49: AssertionError
+====================== 3 failed, 2 passed in 0.85 seconds ======================

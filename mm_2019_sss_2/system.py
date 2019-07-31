@@ -40,13 +40,14 @@ class SystemSetup:
     """
 
     def __init__(self, method: str = 'random', num_particles: int = 20,
-                 box_length: (int, float) = 3.0, filename: str = None):
+                 reduced_density: (int, float) = 0.9, filename: str = None):
 
         self.method = method
-        self.box_length = float(box_length)
+        self.num_particles = num_particles
+        self.reduced_density = reduced_density
 
         if self.method == 'random':
-            self._initialize_random_simulation_(box_length, num_particles)
+            self._initialize_random_simulation_(self.box_length, num_particles)
         elif self.method == 'file':
             try:
                 self._read_info_from_file_(filename)
@@ -56,10 +57,14 @@ class SystemSetup:
                 try:
                     self._read_info_from_file_(filename)
                 except FileNotFoundError:
-                    self._read_in_error_(num_particles, box_length)
+                    self._read_in_error_(num_particles, self.box_length)
         else:
             raise TypeError('You are using a method that is not supported '
                             'at this moment.')
+
+    @property
+    def box_length(self):
+        return np.cbrt(self.num_particles/self.reduced_density)
 
     def _read_in_error_(self, num_particles, box_length):
         print('Either you entered the incorrect file or the file was not '
@@ -73,6 +78,8 @@ class SystemSetup:
     def _read_info_from_file_(self, filename):
         self.coordinates = np.loadtxt(filename, skiprows=2, usecols=(1, 2, 3))
         self.n_particles = len(self.coordinates)
+        print(self.coordinates)
+        print(self.n_particles)
 
     def _initialize_random_simulation_(self, box_length, num_particles):
         self.n_particles = num_particles
