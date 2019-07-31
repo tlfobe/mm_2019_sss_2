@@ -29,4 +29,4 @@ def test_energy_calculator():
     test_coords = np.array([[0,0,0], [0,0,1.5]])
     assert(energy_obj.calculate_initial_energy(test_coords, 10) == -0.03059177374878155)
     energy_obj.simulation_cutoff = 1
-    assert(energy_obj.calculate_initial_energy(test_coords, 10) == 0)
+    assert(energy_obj.calculate_initial_energy(test_coords, 10) == 0) 
