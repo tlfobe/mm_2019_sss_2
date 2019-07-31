@@ -1,74 +1,82 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-
 class EnergyFunction(ABC):
+    """This class is an abstract class for all the energy functions that are
+    going to be written. All energy functions that inherit this structure MUST
+    have a calc_energy method and a cutoff_correction method.
+    """
+
     @abstractmethod
     def calc_energy(self):
         pass
 
+    @abstractmethod
     def cutoff_correction(self):
         pass
 
-
 class LJ(EnergyFunction):
-    """Set-up for the Lennard--Jones potential.
-
+    """Setup for the Lennard-Jones potential.
+​
     Parameters
     ----------
     epsilon: float, int
+​
     sigma: float, int
-
-    Returns
-    --------
-    A class?
     """
-    def __init__(self, epsilon, sigma):
-        self.sigma = sigma
-        self.epsilon = epsilon
+
+    def __init__(self, epsilon: (int, float) = 0.5,
+                 sigma: (int, float) = 1.0):
+        self.sigma = float(sigma)
+        self.epsilon = float(epsilon)
 
     def calc_energy(self, r):
         return (4 * self.epsilon * ((self.sigma / r) ** 12
                                     - (self.sigma / r) ** 6))
 
     def cutoff_correction(self, cutoff, number_particles, box_length):
-        pass
-
+        return(0)
 
 class Buckingham(EnergyFunction):
     """Set-up for the Buckingham potential.
-
+​
     Parameters
     ----------
-    epsilon: float, int
-    sigma: float, int
-
-    Returns
-    --------
-    A class?
+    rho: float, int
+​
+    a: float, int
+​
+    c: float, int
     """
-    def __init__(self, rho, A, C):
-        self.rho = rho
-        self.A = A
-        self.C = C
+
+    def __init__(self, rho: (int, float) = 1.0, a: (int, float) = 1.0,
+                 c: (int, float) = 1.0):
+        self.rho = float(rho)
+        self.a = float(a)
+        self.c = float(c)
 
     def calc_energy(self, r):
-        return (self.A * np.exp(-r / self.rho) - self.C / r ** 6)
-
+        return self.a * np.exp(-r / self.rho) - self.c / r ** 6
     def cutoff_correction(self, cutoff, number_particles, box_length):
-        pass
+        return(0)
 
 
 class UnitlessLJ(EnergyFunction):
+    """Set-up for the Buckingham potential.
+​
+    Parameters
+    ----------
+    r: float, int
+    """
+
     def __init__(self):
         pass
 
-    def calc_energy(self, r):
-        return (4.0 * (np.power(1 / r, 12) - np.power(1 / r, 6)))
+    def calc_energy(self, r: (int, float) = None):
+        return 4.0 * (np.power(1 / r, 12)
+                      - np.power(1 / r, 6))
 
     def cutoff_correction(self, cutoff, number_particles, box_length):
-        # This function computes the standard tail energy correction for the LJ potential
-
         volume = np.power(box_length, 3)
         sig_by_cutoff3 = np.power(1.0 / cutoff, 3)
         sig_by_cutoff9 = np.power(sig_by_cutoff3, 3)
@@ -88,6 +96,7 @@ class potentialEnergyFactory:
 
     def build_energy_method(self, potential_type, **kwargs):
         energy_class = self.methods[potential_type](**kwargs)
+
         return (energy_class)
 
 
@@ -178,12 +187,12 @@ class Energy:
             for j_particle in range(i_particle):
                 r_i = coordinates[i_particle]
                 r_j = coordinates[j_particle]
-                rij2 = self._minimum_image_distance(r_i, r_j, box_length)
-                if rij2 < self.simulation_cutoff ** 2:
-                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
+                rij = self._minimum_image_distance(r_i, r_j, box_length)
+                if rij < self.simulation_cutoff:
+                    e_pair = self.energy_obj.calc_energy(rij)
+                    print(f'e pair: {e_pair}')
                     e_total += e_pair
         return e_total
-
 
     def calculate_pair_energy(self, coordinates, box_length, i_particle):
         """This function computes the sum of all pairwise VDW energy between each
@@ -211,9 +220,8 @@ class Energy:
             the system.
         """
 
-            # This function computes the energy of a particle with
-            # the rest of the system
-
+       # This function computes the energy of a particle with
+        # the rest of the system
 
         e_total = 0.0
 
@@ -227,11 +235,11 @@ class Energy:
 
                 j_position = coordinates[j_particle]
 
-                rij2 = self._minimum_image_distance(i_position, j_position,
-                                                        box_length)
+                rij = self._minimum_image_distance(i_position, j_position,
+                                                    box_length)
 
-                if rij2 < self.simulation_cutoff ** 2:
-                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
+                if rij < self.simulation_cutoff:
+                    e_pair = self.energy_obj.calc_energy(rij)
                     e_total += e_pair
         return e_total
 
