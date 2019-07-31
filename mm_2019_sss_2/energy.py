@@ -1,25 +1,27 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-
 class EnergyFunction(ABC):
     """This class is an abstract class for all the energy functions that are
     going to be written. All energy functions that inherit this structure MUST
-    have a calc_energy method.
+    have a calc_energy method and a cutoff_correction method.
     """
 
     @abstractmethod
     def calc_energy(self):
         pass
 
+    @abstractmethod
+    def cutoff_correction(self):
+        pass
 
 class LJ(EnergyFunction):
     """Setup for the Lennard-Jones potential.
-
+​
     Parameters
     ----------
     epsilon: float, int
-
+​
     sigma: float, int
     """
 
@@ -32,16 +34,18 @@ class LJ(EnergyFunction):
         return (4 * self.epsilon * ((self.sigma / r) ** 12
                                     - (self.sigma / r) ** 6))
 
+    def cutoff_correction(self, cutoff, number_particles, box_length):
+        return(0)
 
 class Buckingham(EnergyFunction):
     """Set-up for the Buckingham potential.
-
+​
     Parameters
     ----------
     rho: float, int
-
+​
     a: float, int
-
+​
     c: float, int
     """
 
@@ -53,11 +57,13 @@ class Buckingham(EnergyFunction):
 
     def calc_energy(self, r):
         return self.a * np.exp(-r / self.rho) - self.c / r ** 6
+    def cutoff_correction(self, cutoff, number_particles, box_length):
+        return(0)
 
 
 class UnitlessLJ(EnergyFunction):
     """Set-up for the Buckingham potential.
-
+​
     Parameters
     ----------
     r: float, int
@@ -76,8 +82,7 @@ class UnitlessLJ(EnergyFunction):
         sig_by_cutoff9 = np.power(sig_by_cutoff3, 3)
         e_correction = sig_by_cutoff9 - 3.0 * sig_by_cutoff3
 
-        e_correction *= 8.0 / 9.0 * np.pi * number_particles / volume\
-                        * number_particles
+        e_correction *= 8.0 / 9.0 * np.pi * number_particles / volume * number_particles
 
         return e_correction
 
@@ -146,9 +151,7 @@ class Energy:
         rij = r_i - r_j
         rij = rij - box_length * np.round(rij / box_length)
         rij2 = np.dot(rij, rij)
-        distance = np.sqrt(rij2)
-
-        return distance
+        return rij2
 
     def calculate_initial_energy(self, coordinates, box_length):
         """Iterates over a set of coordinates to calculate total system energy
@@ -184,9 +187,10 @@ class Energy:
             for j_particle in range(i_particle):
                 r_i = coordinates[i_particle]
                 r_j = coordinates[j_particle]
-                rij2 = self._minimum_image_distance(r_i, r_j, box_length)
-                if rij2 < self.simulation_cutoff ** 2:
-                    e_pair = self.energy_obj.calc_energy(np.sqrt(rij2))
+                rij = self._minimum_image_distance(r_i, r_j, box_length)
+                if rij < self.simulation_cutoff:
+                    e_pair = self.energy_obj.calc_energy(rij)
+                    print(f'e pair: {e_pair}')
                     e_total += e_pair
         return e_total
 
@@ -216,7 +220,7 @@ class Energy:
             the system.
         """
 
-        # This function computes the energy of a particle with
+       # This function computes the energy of a particle with
         # the rest of the system
 
         e_total = 0.0
@@ -234,7 +238,7 @@ class Energy:
                 rij = self._minimum_image_distance(i_position, j_position,
                                                     box_length)
 
-                if rij  < self.simulation_cutoff:
+                if rij < self.simulation_cutoff:
                     e_pair = self.energy_obj.calc_energy(rij)
                     e_total += e_pair
         return e_total
